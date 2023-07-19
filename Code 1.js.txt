@@ -1,0 +1,44 @@
+function minimumStepsToMakePasswordStrong(password) {
+  let requiredSteps = 0;
+  
+  // Check password length
+  if (password.length < 6) {
+    requiredSteps = 6 - password.length;
+  }
+  
+  // Check for missing character types
+  const characterTypes = {
+    lowerCase: /[a-z]/,   //lowercase
+    upperCase: /[A-Z]/,    //uppercase 
+    digit: /[0-9]/      //digits
+  };
+  
+  let missingTypes = 0;
+  //check for any values in characterTypes is missing in password
+  for (const type of Object.values(characterTypes)) {
+    if (!type.test(password)) {
+      missingTypes++;
+    }
+  }
+  
+  //In some cases requiredSteps higher than missing types ie ex "aa1" has 
+  //missing types count 1 but required steps is 3 and vice versa so we 
+  //get the max.
+  requiredSteps = Math.max(requiredSteps, missingTypes);
+  
+  // Check for consecutive characters
+  const consecutiveCharsRegex = /(.)\1{2}/g;
+  const consecutiveCharsCount = (password.match(consecutiveCharsRegex) || []).length;
+  
+  //Again check the same bw requiredSteps and consecutive chars
+  requiredSteps = Math.max(requiredSteps, consecutiveCharsCount);
+  return requiredSteps;
+}
+
+// Test cases
+console.log(minimumStepsToMakePasswordStrong("a")); // Output: 5
+console.log(minimumStepsToMakePasswordStrong("aA1")); // Output: 3
+console.log(minimumStepsToMakePasswordStrong("1337C0d3"));// Output: 0
+console.log(minimumStepsToMakePasswordStrong("1337c0d3"));// Output: 1
+console.log(minimumStepsToMakePasswordStrong("13372223"));// Output: 2
+console.log(minimumStepsToMakePasswordStrong("Aa"));// Output: 4

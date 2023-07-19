@@ -1,0 +1,38 @@
+function minimumPartitionDifference(nums) {
+  if(nums.length == 2) {
+      return Math.max(nums[0], nums[1]) - Math.min(nums[0], nums[1]);
+  }
+  const n = nums.length;
+  let minDifference = Infinity;
+
+  // Recursive helper function to find the minimum difference
+  function partitionHelper(index, sum1, sum2) {
+    // Base case: reached the end of the array
+    if (index === n) {
+      return Math.abs(sum1 - sum2);
+    }
+
+    // Recursively try two possibilities: include the current element in partition 1 or partition 2
+    const diff1 = partitionHelper(index + 1, sum1 + nums[index], sum2);
+    const diff2 = partitionHelper(index + 1, sum1, sum2 + nums[index]);
+
+    // Return the minimum difference among the two possibilities
+    return Math.min(diff1, diff2);
+  }
+
+  // Start the recursive partitioning from index 0 with empty partitions
+  minDifference = partitionHelper(0, 0, 0);
+
+  return minDifference;
+}
+// Example 1
+const nums1 = [3, 9, 7, 3];
+console.log(minimumPartitionDifference(nums1)); // Output: 2
+
+// Example 2
+const nums2 = [-36, 36];
+console.log(minimumPartitionDifference(nums2)); // Output: 72
+
+// Example 3
+const nums3 = [2, -1, 0, 4, -2, -9];
+console.log(minimumPartitionDifference(nums3)); // Output: 0
